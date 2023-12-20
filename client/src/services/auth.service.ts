@@ -17,7 +17,7 @@ export class AuthService {
         if (isPlatformServer(this._platformId))
             return false;
         return new Promise<boolean>((resolve, reject) => {
-            this._http.get<boolean>('/auth', { withCredentials: true }).subscribe({
+            this._http.get('/auth', { withCredentials: true, responseType: 'text' }).subscribe({
                 complete() {
                     resolve(true);
                 },

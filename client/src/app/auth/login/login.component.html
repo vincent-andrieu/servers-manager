@@ -1,3 +1,8 @@
-<h1 class="text-3xl font-bold underline">
-    Login !
-</h1>
+<div class="flex h-full justify-center items-center">
+    <button mat-raised-button color="primary" (click)="authService.login()">
+        <div class="flex flex-row items-center space-x-1">
+            <img height="40px" width="40px" src="assets/icons/discord.svg" style="margin-left: -4px;">
+            <span class="text-base whitespace-nowrap ml-10">Se connecter</span>
+        </div>
+    </button>
+</div>
