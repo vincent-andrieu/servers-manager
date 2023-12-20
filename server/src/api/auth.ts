@@ -28,6 +28,8 @@ export default class AuthRoutes extends TemplateRoutes {
 
     private _init() {
 
+        this._route("get", "/auth", (_, res: Response) => res.sendStatus(200));
+
         this._route("get", "/auth/login/failure", (req: Request, res: Response) => {
             res.redirect(this._clientUrl + "/auth/login/failure?failure=" + (req.session as unknown as { messages: Array<string> }).messages[0]);
         });
