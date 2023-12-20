@@ -34,11 +34,7 @@ export class AuthService {
     }
 
     login() {
-        location.href = environment.apiUrl + '/auth/discord/login';
-    }
-
-    register() {
-        location.href = environment.apiUrl + '/auth/discord/register';
+        location.href = environment.apiUrl + '/auth/discord';
     }
 
     public async logout(): Promise<void> {
