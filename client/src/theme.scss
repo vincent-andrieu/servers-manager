@@ -1,0 +1,50 @@
+@use '@angular/material' as mat;
+
+// Import custom themes
+
+/*              DARK THEME              */
+// Custom colors
+$primary: mat.define-palette(mat.$indigo-palette);
+$accent: mat.define-palette(mat.$grey-palette, 200);
+
+// Create the theme object
+$theme: mat.define-dark-theme((
+ color: (
+   primary: $primary,
+   accent: $accent,
+ )
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+
+// Include theme styles for your custom components.
+
+/*
+** Custom styles
+*/
+
+body {
+    background-color: mat.get-theme-color($theme, background, card);
+}
+
+::-webkit-scrollbar {
+    max-width: 10px;
+
+    /* Track */
+    &-track {
+        background: map-get($accent, default);
+    }
+
+    /* Handle */
+    &-thumb {
+        background: mat.get-theme-color($theme, background, card);
+        border-radius: 10px;
+
+        /* Handle on hover */
+        &:hover {
+            background: mat.get-theme-color($theme, primary, default);
+        }
+    }
+}

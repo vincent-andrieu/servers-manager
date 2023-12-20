@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "./theme.scss";
+
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+:disabled {
+    cursor: not-allowed !important;
+}
+
+.snackbar-error {
+    --mdc-snackbar-container-color: red;
+}
