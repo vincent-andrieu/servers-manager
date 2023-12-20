@@ -31,7 +31,7 @@ import { HomeModule } from "./home/home.module";
         { provide: HTTP_INTERCEPTORS, useClass: BaseUrlInterceptor, multi: true },
         { provide: "BASE_API_URL", useValue: environment.apiUrl },
         { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'outline' } },
-        { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 100000 } }
+        { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 5000 } }
     ],
     bootstrap: [AppComponent]
 })
