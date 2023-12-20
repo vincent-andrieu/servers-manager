@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import "module-alias/register.js";
 
+import AuthRoutes from "@api/auth";
 import HealthRoutes from "@api/health";
 import initDatabase from "./init/database";
 import initExpress from "./init/express";
@@ -19,6 +20,7 @@ async function main() {
 
     // Routes
     new HealthRoutes(app, authentificationMiddleware.whitelistRoute);
+    new AuthRoutes(app, authentificationMiddleware.whitelistRoute);
 
     // Error middlewares
     app.use(errorLoggerMiddleware);
