@@ -23,7 +23,7 @@ export const authRouter: Route = {
                     const router = inject(Router);
                     const snackbarService = inject(SnackbarService);
 
-                    snackbarService.open(route.queryParamMap.get('message') || 'Erreur de connexion');
+                    snackbarService.openCustomError(route.queryParamMap.get('message') || 'Erreur de connexion');
                     return router.parseUrl('/auth');
                 }
             ]

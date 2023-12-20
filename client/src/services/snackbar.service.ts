@@ -1,5 +1,6 @@
+import { isPlatformServer } from "@angular/common";
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 
@@ -7,13 +8,19 @@ import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material
     providedIn: 'root'
 })
 export class SnackbarService {
+    private readonly _platformId = inject(PLATFORM_ID);
+
     constructor(private _matSnackBar: MatSnackBar) {}
 
-    public open(message: string): MatSnackBarRef<TextOnlySnackBar> {
+    public open(message: string): MatSnackBarRef<TextOnlySnackBar> | void {
+        if (isPlatformServer(this._platformId))
+            return;
         return this._matSnackBar.open(message);
     }
 
     public openError(error?: HttpErrorResponse): void {
+        if (isPlatformServer(this._platformId))
+            return;
         console.error(error);
         let message = "Server error";
 
@@ -28,7 +35,9 @@ export class SnackbarService {
         this._matSnackBar.open(message, undefined, { panelClass: 'snackbar-error' });
     }
 
-    public openCustomError(message: string): MatSnackBarRef<TextOnlySnackBar> {
+    public openCustomError(message: string): MatSnackBarRef<TextOnlySnackBar> | void {
+        if (isPlatformServer(this._platformId))
+            return;
         return this._matSnackBar.open(message, undefined, { panelClass: 'snackbar-error' });
     }
 }
