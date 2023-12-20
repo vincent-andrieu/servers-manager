@@ -20,6 +20,7 @@ $theme: mat.define-dark-theme((
 // that you are using.
 
 // Include theme styles for your custom components.
+@include mat.all-component-themes($theme);
 
 /*
 ** Custom styles
