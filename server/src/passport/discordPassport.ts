@@ -6,12 +6,17 @@ import { env, nextTick } from "process";
 
 import UserSchema from "@schemas/userSchema";
 import { User } from "core";
+import { isUserWhitelisted } from "./setupPassport";
 
 async function authentification(_accessToken: string, _refreshToken: string, profile: Profile, done: VerifyCallback) {
     if (!profile.id)
         return done(new Error("Discord id not found"));
     if (!profile.verified)
         return done(null, undefined, { message: "Discord account not verified" });
+    if (!profile.mfa_enabled)
+        return done(null, undefined, { message: "Discord account not secured" });
+    if (!isUserWhitelisted(profile.id))
+        return done(null, undefined, { message: "Discord account not whitelisted" });
     const userSchema = new UserSchema();
     let user = await userSchema.findByDiscordId(profile.id);
 
