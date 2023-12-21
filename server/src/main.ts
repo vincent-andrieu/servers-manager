@@ -3,6 +3,7 @@ import "module-alias/register.js";
 
 import AuthRoutes from "@api/auth";
 import HealthRoutes from "@api/health";
+import ServersRoutes from "@api/servers";
 import initDatabase from "./init/database";
 import initExpress from "./init/express";
 import AuthentificationMiddleware from "./middlewares/authentification";
@@ -21,6 +22,7 @@ async function main() {
     // Routes
     new HealthRoutes(app, authentificationMiddleware.whitelistRoute);
     new AuthRoutes(app, authentificationMiddleware.whitelistRoute);
+    new ServersRoutes(app);
 
     // Error middlewares
     app.use(errorLoggerMiddleware);
