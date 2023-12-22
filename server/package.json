@@ -26,6 +26,7 @@
         "@types/passport": "^1.0.16",
         "@types/passport-discord": "^0.1.11",
         "@types/passport-oauth2": "^1.4.15",
+        "@types/socket.io": "^3.0.2",
         "@typescript-eslint/eslint-plugin": "^6.14.0",
         "@typescript-eslint/parser": "^6.14.0",
         "eslint": "^8.56.0",
@@ -38,12 +39,15 @@
         "dotenv": "^16.3.1",
         "express": "^4.18.2",
         "express-session": "^1.17.3",
+        "http": "^0.0.1-security",
         "module-alias": "^2.2.3",
         "mongoose": "^8.0.3",
         "node-docker-api": "^1.1.22",
         "passport": "^0.7.0",
         "passport-discord": "^0.1.4",
-        "passport-oauth2": "^1.7.0"
+        "passport-oauth2": "^1.7.0",
+        "rxjs": "^7.8.1",
+        "socket.io": "^4.7.2"
     },
     "_moduleAliases": {
         "@api": "build/api",

@@ -1,22 +1,31 @@
 import { Express } from "express";
+import { Server as IOServer } from "socket.io";
 
 import DockerService from "@services/dockerService";
-import { Server } from "core";
 import TemplateRoutes from "./templateRoutes";
 
 export default class ServersRoutes extends TemplateRoutes {
 
-    constructor(app: Express) {
-        super(app);
+    constructor(app: Express, io: IOServer) {
+        super(app, io);
 
-        this._init();
+        this._initExpress();
+        this._initSockets();
     }
 
-    private _init() {
-        this._route<never, Array<Server>>("get", "/servers", async (_, res) => {
-            const server = await new DockerService().containerList();
+    private _initExpress() {}
 
-            res.send(server);
+    private async _initSockets() {
+        if (!this._io)
+            throw new Error("Socket server not initialized");
+
+        const dockerService = new DockerService();
+        const events = await dockerService.listenContainersEvents();
+
+        events.subscribe(async () => {
+            const servers = await dockerService.containerList();
+
+            this._io?.emit("servers", servers);
         });
     }
 }

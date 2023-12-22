@@ -2,11 +2,12 @@ import { Express, NextFunction, Request, RequestHandler, Response } from "expres
 import { RouteParameters } from "express-serve-static-core";
 import mongoose from "mongoose";
 import { env } from "process";
+import { Server } from "socket.io";
 
 export default class TemplateRoutes {
     protected readonly _clientUrl: string;
 
-    constructor(protected _app: Express, private _defaultHeader: Record<string, string> = {
+    constructor(protected _app: Express, protected _io?: Server, private _defaultHeader: Record<string, string> = {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         "Content-Type": "application/json"
     }) {

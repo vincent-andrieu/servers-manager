@@ -5,27 +5,29 @@ import AuthRoutes from "@api/auth";
 import HealthRoutes from "@api/health";
 import ServersRoutes from "@api/servers";
 import initDatabase from "./init/database";
-import initExpress from "./init/express";
+import HttpServer from "./init/express";
 import AuthentificationMiddleware from "./middlewares/authentification";
 import { errorLoggerMiddleware, loggerMiddleware } from "./middlewares/logger";
 
 async function main() {
     console.log("Server starting...");
     initDatabase();
-    const app = await initExpress();
+    const server = new HttpServer();
     const authentificationMiddleware = new AuthentificationMiddleware();
 
+    await Promise.all([server.initExpress(), server.initSockets()]);
+
     // Middlewares
-    app.use(loggerMiddleware);
-    app.use(authentificationMiddleware.handler.bind(authentificationMiddleware));
+    server.app.use(loggerMiddleware);
+    server.app.use(authentificationMiddleware.handler.bind(authentificationMiddleware));
 
     // Routes
-    new HealthRoutes(app, authentificationMiddleware.whitelistRoute);
-    new AuthRoutes(app, authentificationMiddleware.whitelistRoute);
-    new ServersRoutes(app);
+    new HealthRoutes(server.app, authentificationMiddleware.whitelistRoute);
+    new AuthRoutes(server.app, authentificationMiddleware.whitelistRoute);
+    new ServersRoutes(server.app, server.io);
 
     // Error middlewares
-    app.use(errorLoggerMiddleware);
+    server.app.use(errorLoggerMiddleware);
 }
 
 main();
