@@ -1,1 +1,49 @@
-<p>home works!</p>
+<div class="flex h-full justify-evenly items-center">
+    <mat-card *ngFor="let server of servers" class="w-72 h-fit">
+
+        <div class="flex flex-row justify-between items-center p-4 w-full">
+            <div class="h-4 w-4 rounded-full" [ngClass]="server.state === 'running' ? 'bg-green-500' : 'bg-red-500'">
+            </div>
+
+            <span class="font-medium text-xl">{{ server.name }}</span>
+
+            <button mat-icon-button [matMenuTriggerFor]="serverMenu" class="-mr-4"
+                    [ngClass]="{ 'invisible': server.state !== 'running' }">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        </div>
+
+        <mat-card-content class="mt-1">
+            <div class="flex flex-row justify-between space-x-2">
+                <p class="underline">Ports :</p>
+                <p>{{ server.ports.join(", ") }}</p>
+            </div>
+            <div class="flex flex-row justify-between space-x-2">
+                <p class="underline">Dernier démarrage :</p>
+                <p class="capitalize">{{ server.startedAt | date: 'd MMMM, h:mm' }}</p>
+            </div>
+            <div class="flex flex-row justify-between space-x-2">
+                <p class="underline">Dernier arrêt :</p>
+                <p class="capitalize">{{ server.finishedAt | date: 'd MMMM, h:mm' }}</p>
+            </div>
+            <span class="font-medium text-gray-500">{{ server.status }}</span>
+        </mat-card-content>
+
+        <mat-card-actions class="justify-center my-1">
+            <button mat-raised-button
+                    [ngStyle]="{ 'background-color': serverMainButton[server.state].color }"
+                    [color]="serverMainButton[server.state].color"
+                    [disabled]="!serverMainButton[server.state].action"
+                    (click)="handleServerAction(server, $any(serverMainButton[server.state].action))">
+                {{ serverMainButton[server.state].label }}
+            </button>
+        </mat-card-actions>
+
+        <mat-menu #serverMenu="matMenu">
+            <button *ngIf="server.state === 'running'" mat-menu-item (click)="handleServerAction(server, 'stop')">
+                <mat-icon color="warn">power_settings_new</mat-icon>
+                <span>Éteindre</span>
+            </button>
+        </mat-menu>
+    </mat-card>
+</div>

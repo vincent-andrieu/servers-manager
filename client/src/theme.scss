@@ -6,13 +6,22 @@
 // Custom colors
 $primary: mat.define-palette(mat.$indigo-palette);
 $accent: mat.define-palette(mat.$grey-palette, 200);
+$success: mat.define-palette(mat.$green-palette, 200);
 
 // Create the theme object
 $theme: mat.define-dark-theme((
- color: (
-   primary: $primary,
-   accent: $accent,
- )
+    color: (
+        primary: $primary,
+        accent: $accent,
+        success: $success,
+    )
+));
+$light-theme: mat.define-light-theme((
+    color: (
+        primary: $primary,
+        accent: $accent,
+        success: $success,
+    )
 ));
 
 // Include theme styles for core and each component used in your app.
@@ -21,6 +30,7 @@ $theme: mat.define-dark-theme((
 
 // Include theme styles for your custom components.
 @include mat.all-component-themes($theme);
+@include mat.menu-theme($light-theme);
 
 /*
 ** Custom styles

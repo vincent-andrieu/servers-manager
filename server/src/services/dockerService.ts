@@ -7,6 +7,18 @@ import { Server } from "core";
 export default class DockerService {
     private _docker = new Docker({ socketPath: '/var/run/docker.sock' });
 
+    public async containerStart(id: string): Promise<void> {
+        await this._docker.container.get(id).start();
+    }
+
+    public async containerStop(id: string): Promise<void> {
+        await this._docker.container.get(id).stop();
+    }
+
+    public async containerRestart(id: string): Promise<void> {
+        await this._docker.container.get(id).restart();
+    }
+
     public async containerList(): Promise<Array<Server>> {
         const containers = await this._docker.container.list({ all: true });
 
@@ -18,7 +30,7 @@ export default class DockerService {
                 name: (container.data as any).Names[0].slice(1),
                 state: (container.data as any).State,
                 status: (container.data as any).Status,
-                ports: (container.data as any).Ports.map((port: any) => port.PublicPort),
+                ports: (container.data as any).Ports.map((port: any) => port.PublicPort).filter(Boolean),
                 startedAt: status.StartedAt,
                 finishedAt: status.FinishedAt
             });
