@@ -1,0 +1,9 @@
+<div class="fakeMenu cursor-pointer" routerLink="/">
+    <div class="fakeButtons fakeClose"></div>
+    <div class="fakeButtons fakeMinimize"></div>
+    <div class="fakeButtons fakeZoom"></div>
+</div>
+<div class="fakeScreen">
+    <p class="prompt">$ {{ serverId }}</p>
+    <p *ngFor="let log of logs" class="terminal-line">> {{ log }}</p>
+</div>

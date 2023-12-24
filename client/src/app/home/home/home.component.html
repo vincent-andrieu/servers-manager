@@ -44,6 +44,10 @@
                 <mat-icon color="warn">power_settings_new</mat-icon>
                 <span>Éteindre</span>
             </button>
+            <button *ngIf="server.state === 'running'" mat-menu-item [routerLink]="['/', server.id, 'logs']">
+                <mat-icon>feed</mat-icon>
+                <span>Logs</span>
+            </button>
         </mat-menu>
     </mat-card>
 </div>

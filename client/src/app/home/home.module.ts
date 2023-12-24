@@ -6,14 +6,17 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from '@angular/material/menu';
 import { SocketIoConfig, SocketIoModule } from "ngx-socket-io";
 
+import { RouterModule } from "@angular/router";
 import { environment } from "@environment";
 import { HomeComponent } from './home/home.component';
+import { ServerLogsComponent } from "./logs/logs.component";
 
 const socketConfig: SocketIoConfig = { url: environment.socketServer, options: { withCredentials: true } };
 
 @NgModule({
     declarations: [
-        HomeComponent
+        HomeComponent,
+        ServerLogsComponent
     ],
     imports: [
         CommonModule,
@@ -22,7 +25,8 @@ const socketConfig: SocketIoConfig = { url: environment.socketServer, options: {
         MatCardModule,
         MatButtonModule,
         MatMenuModule,
-        MatIconModule
+        MatIconModule,
+        RouterModule
     ]
 })
 export class HomeModule {}

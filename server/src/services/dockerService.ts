@@ -37,6 +37,18 @@ export default class DockerService {
         }));
     }
 
+    public async containerLogs(id: string): Promise<Array<string>> {
+        const container = this._docker.container.get(id);
+        const stream: Stream = (await container.logs({ follow: false, stdout: true, stderr: true })) as Stream;
+        const logs: Array<string> = [];
+
+        return new Promise<Array<string>>((resolve, reject) => {
+            stream.on('data', (data) => logs.push(data.toString()));
+            stream.on('end', () => resolve(logs));
+            stream.on('error', (error) => reject(error));
+        });
+    }
+
     public async listenContainersEvents(): Promise<Observable<unknown>> {
         const eventsSubject = new Subject<unknown>();
 
@@ -56,5 +68,26 @@ export default class DockerService {
         }
 
         return eventsSubject.asObservable();
+    }
+
+    public async listenServerLogs(id: string): Promise<Observable<string>> {
+        const logsSubject = new Subject<string>();
+
+        try {
+            const stream: Stream = (await this._docker.container.get(id).logs({
+                follow: true,
+                stdout: true,
+                stderr: true
+            })) as Stream;
+
+            stream.on('data', (data) => logsSubject.next(data.toString()));
+            stream.on('end', () => logsSubject.complete());
+            stream.on('error', (error) => logsSubject.error(error));
+        } catch (error) {
+            logsSubject.error(error);
+            logsSubject.complete();
+        }
+
+        return logsSubject.asObservable();
     }
 }

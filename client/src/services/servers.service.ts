@@ -20,16 +20,24 @@ export class ServersService {
         return this._socket.fromEvent<Array<Server>>('servers');
     }
 
-    public startServer(id: string): Promise<void> {
-        return lastValueFrom(this._http.post<void>(`/servers/${id}/start`, null, { withCredentials: true }));
+    public async startServer(id: string): Promise<void> {
+        await lastValueFrom(this._http.post(`/servers/${id}/start`, null, { withCredentials: true, responseType: 'text' }));
     }
 
-    public stopServer(id: string) {
-        return lastValueFrom(this._http.post<void>(`/servers/${id}/stop`, null, { withCredentials: true }));
+    public async stopServer(id: string) {
+        await lastValueFrom(this._http.post(`/servers/${id}/stop`, null, { withCredentials: true, responseType: 'text' }));
     }
 
-    public restartServer(id: string) {
-        return lastValueFrom(this._http.post<void>(`/servers/${id}/restart`, null, { withCredentials: true }));
+    public async restartServer(id: string) {
+        await lastValueFrom(this._http.post(`/servers/${id}/restart`, null, { withCredentials: true, responseType: 'text' }));
+    }
+
+    public getServerLogs(serverId: string) {
+        return this._http.get<Array<string>>(`/servers/${serverId}/logs`, { withCredentials: true });
+    }
+
+    public listenServerLogs(serverId: string) {
+        return this._socket.fromEvent<string>('server-logs:' + serverId);
     }
 
 }

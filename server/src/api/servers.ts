@@ -8,6 +8,7 @@ import TemplateRoutes from "./templateRoutes";
 export default class ServersRoutes extends TemplateRoutes {
 
     private readonly _dockerService = new DockerService();
+    private _serversLogs: Record<string, boolean> = {};
 
     constructor(app: Express, io: IOServer) {
         super(app, io);
@@ -21,6 +22,12 @@ export default class ServersRoutes extends TemplateRoutes {
             const server = await this._dockerService.containerList();
 
             res.send(server);
+        });
+
+        this._route<never, Array<string>>("get", "/servers/:id/logs", async (req, res) => {
+            const logs = await this._dockerService.containerLogs(req.params.id);
+
+            res.send(logs);
         });
 
         this._route<never, void>("post", "/servers/:id/start", async (req, res) => {
@@ -46,12 +53,38 @@ export default class ServersRoutes extends TemplateRoutes {
         if (!this._io)
             throw new Error("Socket server not initialized");
 
+        this._listenEvents();
+    }
+
+    private async _listenEvents() {
         const events = await this._dockerService.listenContainersEvents();
 
         events.subscribe(async () => {
             const servers = await this._dockerService.containerList();
 
             this._io?.emit("servers", servers);
+            servers.forEach((server) => {
+                if (!this._serversLogs[server.id] && server.state === "running")
+                    this._listenServerLogs(server.id);
+            });
+        });
+    }
+
+    private async _listenServerLogs(serverId: string) {
+        const logs = await this._dockerService.listenServerLogs(serverId);
+
+        this._serversLogs[serverId] = true;
+        logs.subscribe({
+            next: (log) => {
+                if (this._serversLogs[serverId])
+                    this._io?.emit("server-logs:" + serverId, log);
+            },
+            complete: () => {
+                this._serversLogs[serverId] = false;
+            },
+            error: () => {
+                this._serversLogs[serverId] = false;
+            }
         });
     }
 }
